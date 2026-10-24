@@ -1,0 +1,8 @@
+[
+  {
+    "directory": "home/zen_senpai/c_projects/game_jam_project",
+    "command": "tcc -I/usr/lib/tcc/include src/main.c",
+    "file": "src/main.c"
+  }
+  
+]
