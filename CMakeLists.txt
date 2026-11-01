@@ -1,34 +1,32 @@
-# 1. Set the minimum required CMake version
-cmake_minimum_required(VERSION 3.11)
 
-# 2. Name your project and specify the language (C)
-project(MyCProject LANGUAGES C)
+cmake_minimum_required(VERSION 3.12)
+project(MyRaylibGame LANGUAGES CXX)
 
-# 3. Use the C24 standard
-set(CMAKE_COMPILER "tcc")
-set(CMAKE_C_STANDARD 99)
-set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-string(REPLACE "-O3" "-O1" CMAKE_C_FLAGS "${CMAKE_C_FLAGS}")
-
+# -------------------------------------------------------------------
+# LOCAL FIND PACKAGE: Locates raylib instantly from your Arch native paths
+# -------------------------------------------------------------------
 find_package(raylib CONFIG REQUIRED) # CONFIG mode maps modern targets perfectly
 
+# Declare your engine executable
+add_executable(MyRaylibGame src/main.cpp)
 
-# Enable all warnings based on the compiler
-if(CMAKE_C_COMPILER_ID MATCHES "TinyCC")
-    add_definitions(-D_DEFAULT_SOURCE)
--endif()
+# Strict warning policies for your playground code
+if(MSVC)
+    target_compile_options(MyRaylibGame PRIVATE /W4 /WX)
+else()
+    target_compile_options(MyRaylibGame PRIVATE -Wall -Wextra -Wpedantic)
+endif()
 
-if(UNIX AND NOT APPLE)
-    target_link_libraries(my_game PRIVATE m dl pthread rt X11)
-    elseif(WIN32)
-    target_link_libraries(my_game PRIVATE opengl32 gdl32 winmm)
-endif()    
-
-add_subdirectory(vendor/raylib)
-
-add_executable(my_program main.c)
-
+# -------------------------------------------------------------------
+# LINKING MECHANICS
+# -------------------------------------------------------------------
+# This binds to your pacman target, handling includes and linkers instantly!
 target_link_libraries(MyRaylibGame PRIVATE raylib)
 
-
+# Linux driver fail-safes for standard X11 setups
+if(UNIX AND NOT APPLE)
+    target_link_libraries(MyRaylibGame PRIVATE m pthread dl rt X11)
+endif()
