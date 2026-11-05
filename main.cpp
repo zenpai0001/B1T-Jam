@@ -1,7 +1,9 @@
 #include "globals.h"
 #include <raylib.h>
 
-void test() {}
+namespace buffers::display {
+void gameplay_buffer();
+}
 
 int main() {
   // I have no idea why this works.
@@ -14,24 +16,15 @@ int main() {
                          .target = player_position,
                          .rotation = 0.0f,
                          .zoom = 1.0f};
+
   SetConfigFlags(FLAG_WINDOW_TRANSPARENT);
   InitWindow(800, 800, "Game");
   SetTargetFPS(60);
   while (!WindowShouldClose()) {
-    move_player();
-    BeginDrawing();
-    ClearBackground(RAYWHITE);
-
-    // Player's field of view.
-    BeginMode2D(player_cam);
-    DrawCircleV(player_position, 3.0f, GREEN);
-    EndMode2D();
-
-    // Random object not in player's camera.
-    DrawCircle(100, 100, 15, BLUE);
-    DrawText("Press [ESC] to quit", 10, 10, 20, DARKGRAY);
-    EndDrawing();
+    InitAudioDevice();
+    buffers::display::gameplay_buffer();
   }
   CloseWindow();
+
   return 0;
 }
