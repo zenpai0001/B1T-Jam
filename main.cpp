@@ -1,8 +1,26 @@
 #include "globals.h"
 #include <raylib.h>
 
-namespace buffers::display {
-void gameplay_buffer();
+void init_buffers() {
+
+  for (int i = 0; i < MAX_BUFFERS; ++i) {
+    controls::buffer[i].buffers =
+        LoadRenderTexture(GetScreenWidth(), GetScreenHeight());
+  }
+  controls::buffer[0].key = KEY_P;
+  controls::buffer[1].key = KEY_NUM_LOCK;
+}
+
+void init_assets() {
+  buffers::display::player_sprite = LoadTexture("shrine_thief.png");
+
+  buffers::display::stream_table[0] = {
+      .sampleRate = 44100, .sampleSize = 32, .channels = 2};
+  buffers::display::sound_table[0] = {.stream =
+                                          buffers::display::stream_table[0],
+                                      .frameCount = 3600,
+                                      .looping = true};
+  PlayMusicStream(buffers::display::sound_table[0]);
 }
 
 int main() {
@@ -20,9 +38,14 @@ int main() {
   SetConfigFlags(FLAG_WINDOW_TRANSPARENT);
   InitWindow(800, 800, "Game");
   SetTargetFPS(60);
+
+  init_assets();
+  init_buffers();
+
   while (!WindowShouldClose()) {
-    InitAudioDevice();
-    buffers::display::gameplay_buffer();
+    UpdateMusicStream(buffers::display::sound_table[0]);
+
+    controls::pause_menu();
   }
   CloseWindow();
 

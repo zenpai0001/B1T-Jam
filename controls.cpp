@@ -7,45 +7,52 @@ enum bindings binding;
 
 // Scoping globally prevents W-shadow.
 buffer_table buffer[MAX_BUFFERS] = {
-    [0] = {.buffers = LoadRenderTexture(-width, -height), .key = KEY_P},
-    [1] = {.buffers = LoadRenderTexture(-width, -height), .key = KEY_ENTER},
+    [0] =
+        {
+            .buffers = LoadRenderTexture(width, height),
+            .key = KEY_P,
+        },
+    [1] = {.buffers = LoadRenderTexture(width, height), .key = KEY_NUM_LOCK},
 };
 
+Rectangle src;
+
 void pause_menu() {
-  BeginTextureMode(buffer[0].buffers);
+  binding = PAUSE;
 
-  BeginDrawing();
-  DrawTexture(buffer[0].buffers.texture, 0, 0, GRAY);
-  DrawText("PAUSED", GetScreenWidth() / 2, GetScreenHeight() / 2, 200, ORANGE);
-  EndDrawing();
-  EndTextureMode();
-}
-
-void handle_buffer() {
-  for (int i = 0; i < MAX_BUFFERS; ++i) {
-    if (binding == PAUSE && IsKeyPressed(buffer[i].key)) {
-      switch (buffer[i].key) {
-      case KEY_P:
-        pause_menu();
-        break;
-      case KEY_NUM_LOCK:
-        // Mutate bindings
-        binding = ACTION;
-
-        if (binding == ACTION && KEY_NUM_LOCK) {
-          // Undo binding upon num_lock being pressed again.
-          binding = PAUSE;
-        }
-        break;
-      }
-    }
+  if (IsKeyPressed(controls::buffer[0].key)) {
+    binding = ACTION;
   }
+  BeginDrawing();
+  ClearBackground(BLACK);
+
+  BeginTextureMode(controls::buffer[0].buffers);
+  ClearBackground(GRAY);
+  DrawText("PAUSED", 10, 10, 20, ORANGE);
+  EndTextureMode();
+
+  src = {0, 0, (float)controls::buffer[0].buffers.texture.width,
+         (float)-controls::buffer[0].buffers.texture.height};
+  DrawTexture(buffer[0].buffers.texture, 0, 0, WHITE);
+  DrawTextureRec(controls::buffer[0].buffers.texture, src, Vector2{0, 0},
+                 WHITE);
+
+  if (binding == ACTION) {
+    ClearBackground(BLACK);
+    src = {0, 0, (float)controls::buffer[1].buffers.texture.width,
+           (float)-controls::buffer[1].buffers.texture.height};
+
+    buffers::display::gameplay_buffer();
+    DrawTexture(controls::buffer[1].buffers.texture, 0, 0, WHITE);
+    DrawTextureRec(controls::buffer[1].buffers.texture, src, Vector2{0, 0},
+                   WHITE);
+  }
+  EndDrawing();
 }
 
 } // namespace controls
 
 namespace buffers::display {
-enum audio_files { WAV, MP3, OGG };
 
 AudioStream stream_table[MAX_BUFFERS] = {
     [0] = {.sampleRate = 44100, .sampleSize = 32, .channels = 2},
@@ -58,6 +65,7 @@ Music sound_table[MAX_BUFFERS] = {
 
 Texture2D player_sprite = LoadTexture("shrine_thief.png");
 
+// TODO: Fix this buffer from flickering and crashing the game.
 void gameplay_buffer() {
 
   /*
@@ -65,29 +73,30 @@ void gameplay_buffer() {
   play music that loops, and move the player around.
   */
 
-  LoadAudioStream(stream_table[0].sampleRate, stream_table[0].sampleSize,
-                  stream_table[0].channels);
-  LoadMusicStream("shrine_stealth.mp3");
-  PlayMusicStream(sound_table[0]);
+  // LoadAudioStream(stream_table[0].sampleRate, stream_table[0].sampleSize,
+  //                 stream_table[0].channels);
+  // LoadMusicStream("shrine_stealth.mp3");
+  // PlayMusicStream(sound_table[0]);
 
-  while (!WindowShouldClose()) {
-    UpdateMusicStream(sound_table[0]);
+  // UpdateMusicStream(sound_table[0]);
+  BeginDrawing();
+  ClearBackground(BLACK);
 
-    BeginDrawing();
-    BeginTextureMode(controls::buffer[1].buffers);
-    ClearBackground(BLACK);
+  BeginTextureMode(controls::buffer[1].buffers);
+  ClearBackground(BLACK);
 
-    BeginScissorMode(80, 0, 100, 10);
-    DrawTexture(player_sprite, 50, 50, WHITE);
-    EndScissorMode();
+  DrawText("GAMEPLAY", 0, 0, 20, ORANGE);
+  EndTextureMode();
+  EndDrawing();
 
-    EndTextureMode();
-    EndDrawing();
+  DrawTexture(controls::buffer[1].buffers.texture, 0, 0, WHITE);
+  if (IsKeyPressed(controls::buffer[0].key)) {
+    controls::pause_menu();
   }
-  StopMusicStream(sound_table[0]);
-  UnloadMusicStream(sound_table[0]);
-  UnloadAudioStream(stream_table[0]);
-  UnloadTexture(player_sprite);
+  // StopMusicStream(sound_table[0]);
+  // UnloadMusicStream(sound_table[0]);
+  // UnloadAudioStream(stream_table[0]);
+  // UnloadTexture(player_sprite);
 }
 
 } // namespace buffers::display

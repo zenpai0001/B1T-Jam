@@ -48,11 +48,45 @@ struct entities {
 
 namespace audio {
 
-typedef enum {
+enum music_state {
   MUSIC_PLAYING,
   MUSIC_PAUSED,
   MUSIC_LOOPING,
   SOUND_FX,
-} music_state;
+};
+
+enum audio_files { OGG, WAV, MP3 };
 
 } // namespace audio
+
+// Forward declare functions and extern here.
+//  Prevents hack fixing missing symbols.
+
+// player.cpp
+namespace player {
+extern keys key_array[6];
+
+void move_player();
+
+extern Vector2 player_position;
+extern Camera2D player_cam;
+} // namespace player
+
+namespace controls {
+extern buffer_table buffer[MAX_BUFFERS];
+
+void pause_menu();
+void handle_buffer();
+
+} // namespace controls
+namespace buffers::display {
+enum audio_files {};
+
+extern AudioStream stream_table[MAX_BUFFERS];
+
+extern Music sound_table[MAX_BUFFERS];
+
+extern Texture2D player_sprite;
+
+void gameplay_buffer();
+} // namespace buffers::display
