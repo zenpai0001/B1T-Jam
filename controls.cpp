@@ -1,9 +1,10 @@
 #include "globals.h"
+#include <iterator>
 #include <raylib.h>
 
 namespace controls {
 
-enum bindings binding;
+static enum bindings binding;
 
 // Scoping globally prevents W-shadow.
 buffer_table buffer[MAX_BUFFERS] = {
@@ -13,90 +14,107 @@ buffer_table buffer[MAX_BUFFERS] = {
             .key = KEY_P,
         },
     [1] = {.buffers = LoadRenderTexture(width, height), .key = KEY_NUM_LOCK},
-};
+    [2] = {.buffers = LoadRenderTexture(width, height)}};
 
 Rectangle src;
 
-void pause_menu() {
-  binding = PAUSE;
+void main_menu() {
 
   if (IsKeyPressed(controls::buffer[0].key)) {
+    binding = PAUSE;
+  }
+  if (IsKeyPressed(controls::buffer[1].key)) {
     binding = ACTION;
   }
-  BeginDrawing();
-  ClearBackground(BLACK);
+  if (IsKeyPressed(controls::buffer[2].key)) {
+    binding = MAIN;
+  }
 
+  BeginDrawing();
+
+  ClearBackground(BLACK);
+  // Placeholder text
+  DrawText("MAIN MENU", 0, 0, 20, ORANGE);
   BeginTextureMode(controls::buffer[0].buffers);
-  ClearBackground(GRAY);
-  DrawText("PAUSED", 10, 10, 20, ORANGE);
+
+  ClearBackground(BLACK);
+  // draw stuff here
+  DrawText("PAUSED", 0, 0, 20, ORANGE);
+  // draw stuff here
   EndTextureMode();
 
-  src = {0, 0, (float)controls::buffer[0].buffers.texture.width,
-         (float)-controls::buffer[0].buffers.texture.height};
-  DrawTexture(buffer[0].buffers.texture, 0, 0, WHITE);
-  DrawTextureRec(controls::buffer[0].buffers.texture, src, Vector2{0, 0},
-                 WHITE);
+  BeginTextureMode(controls::buffer[2].buffers);
+  ClearBackground(BLACK);
+  // draw stuff here
+  DrawText("MAIN MENU", 0, 0, 20, ORANGE);
+  // draw stuff here
+  EndTextureMode();
 
-  if (binding == ACTION) {
+  // This function will handle its texturemode
+  buffers::display::gameplay_buffer();
+
+  if (binding == PAUSE) {
+    DrawTexture(controls::buffer[0].buffers.texture, 0, 0, WHITE);
     ClearBackground(BLACK);
-    src = {0, 0, (float)controls::buffer[1].buffers.texture.width,
-           (float)-controls::buffer[1].buffers.texture.height};
-
-    buffers::display::gameplay_buffer();
+  }
+  if (binding == ACTION) {
     DrawTexture(controls::buffer[1].buffers.texture, 0, 0, WHITE);
-    DrawTextureRec(controls::buffer[1].buffers.texture, src, Vector2{0, 0},
-                   WHITE);
+    ClearBackground(BLACK);
+  }
+  if (binding == MAIN) {
+    DrawTexture(controls::buffer[2].buffers.texture, 0, 0, WHITE);
   }
   EndDrawing();
 }
-
 } // namespace controls
-
 namespace buffers::display {
 
-AudioStream stream_table[MAX_BUFFERS] = {
-    [0] = {.sampleRate = 44100, .sampleSize = 32, .channels = 2},
-
+audio_table music_system[MAX_BUFFERS] = {
+    [0] = {.filepath = "shrine_stealth.mp3"},
+    [1] = {.filepath = "shrine_stealth_2.mp3"},
+    [2] = {.filepath = "shrine_heist_theme"},
+    [3] = {.filepath = "zombie_horde.mp3"},
+    [4] = {.filepath = "zombie_horde_2.mp3"},
 };
-Music sound_table[MAX_BUFFERS] = {
-    [0] = {.stream = stream_table[0], .frameCount = 3600, .looping = true},
 
+audio_table sound_system[MAX_BUFFERS] = {
+    [0] = {.filepath = "Shield.wav"},
+    [1] = {.filepath = "crossbow.wav"},
+    [2] = {.filepath = "death sfx.wav"},
+    [3] = {.filepath = "ninja star.wav"},
+    [4] = {.filepath = "shrine breaking.wav"},
+    [5] = {.filepath = "shrine broken.wav"},
+    [6] = {.filepath = "Steel shrine charge.wav"},
+    [7] = {.filepath = "Steel shrine charge v2.wav"}};
+
+texture_atlas atlas[MAX_BUFFERS] = {
+    [0] = {.filepath = "shrine_thief.png"},
+    [1] = {.filepath = "shrine_thief_2.png"},
+    [2] = {.filepath = "tileset.png"},
+    [3] = {.filepath = "enemy1.png"},
+    [4] = {.filepath = "enemy2.png"},
 };
 
-Texture2D player_sprite = LoadTexture("shrine_thief.png");
+void load_atlas() {
+  for (int i = 0; i < 5; ++i) {
+    atlas[i].img = LoadImage(atlas[i].filepath);
+    atlas[i].texture = LoadTextureFromImage(atlas[i].img);
+  }
+}
+void load_music() {
+  for (int i = 0; i < 7; ++i) {
+    music_system[i].sound = LoadSound(music_system[i].filepath);
+  }
+  for (int i = 0; i < 13; ++i) {
+    sound_system[i].music = LoadMusicStream(sound_system[i].filepath);
+  }
+}
 
-// TODO: Fix this buffer from flickering and crashing the game.
 void gameplay_buffer() {
-
-  /*
-  Draw to buffer, load audio stream,
-  play music that loops, and move the player around.
-  */
-
-  // LoadAudioStream(stream_table[0].sampleRate, stream_table[0].sampleSize,
-  //                 stream_table[0].channels);
-  // LoadMusicStream("shrine_stealth.mp3");
-  // PlayMusicStream(sound_table[0]);
-
-  // UpdateMusicStream(sound_table[0]);
-  BeginDrawing();
-  ClearBackground(BLACK);
-
   BeginTextureMode(controls::buffer[1].buffers);
   ClearBackground(BLACK);
-
   DrawText("GAMEPLAY", 0, 0, 20, ORANGE);
   EndTextureMode();
-  EndDrawing();
-
-  DrawTexture(controls::buffer[1].buffers.texture, 0, 0, WHITE);
-  if (IsKeyPressed(controls::buffer[0].key)) {
-    controls::pause_menu();
-  }
-  // StopMusicStream(sound_table[0]);
-  // UnloadMusicStream(sound_table[0]);
-  // UnloadAudioStream(stream_table[0]);
-  // UnloadTexture(player_sprite);
 }
 
 } // namespace buffers::display

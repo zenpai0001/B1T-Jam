@@ -3,7 +3,7 @@
 #include <raylib.h>
 
 // This just holds definitions. Map Generation.
-uint16_t map_chunk_variant0[CHUNK_X][CHUNK_Y] = {
+float map_chunk_variant0[CHUNK_X][CHUNK_Y] = {
     [0] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
     [1] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
     [2] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
@@ -21,7 +21,7 @@ uint16_t map_chunk_variant0[CHUNK_X][CHUNK_Y] = {
     [14] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
     [15] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
 };
-uint16_t map_chunk_variant1[CHUNK_X][CHUNK_Y] = {
+float map_chunk_variant1[CHUNK_X][CHUNK_Y] = {
     [0] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
     [1] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
     [2] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
@@ -39,7 +39,7 @@ uint16_t map_chunk_variant1[CHUNK_X][CHUNK_Y] = {
     [14] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
     [15] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
 };
-uint16_t map_chunk_variant2[CHUNK_X][CHUNK_Y] = {
+float map_chunk_variant2[CHUNK_X][CHUNK_Y] = {
     [0] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
     [1] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
     [2] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
@@ -57,7 +57,7 @@ uint16_t map_chunk_variant2[CHUNK_X][CHUNK_Y] = {
     [14] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
     [15] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
 };
-uint16_t map_chunk_variant3[CHUNK_X][CHUNK_Y] = {
+float map_chunk_variant3[CHUNK_X][CHUNK_Y] = {
     [0] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
     [1] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
     [2] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},

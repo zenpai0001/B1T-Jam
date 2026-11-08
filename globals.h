@@ -18,7 +18,7 @@ struct buffer_table {
 #define SPEED 50.0f
 #define DELTA_TIME GetFrameTime()
 
-enum bindings { MOVEMENT = 1 << 0, ACTION = 1 << 1, PAUSE = 3 };
+enum bindings { MOVEMENT = 1 << 0, ACTION = 1 << 1, PAUSE = 3, MAIN = 4 };
 /*
 Keys struct features a tagged union for keybindings.
 */
@@ -75,18 +75,25 @@ extern Camera2D player_cam;
 namespace controls {
 extern buffer_table buffer[MAX_BUFFERS];
 
-void pause_menu();
-void handle_buffer();
+void main_menu();
 
 } // namespace controls
 namespace buffers::display {
 enum audio_files {};
 
-extern AudioStream stream_table[MAX_BUFFERS];
-
-extern Music sound_table[MAX_BUFFERS];
+struct audio_table {
+  const char *filepath;
+  Music music;
+  Sound sound;
+};
 
 extern Texture2D player_sprite;
 
+struct texture_atlas {
+  const char *filepath;
+  Image img;
+  Texture2D texture;
+};
+void load_atlas();
 void gameplay_buffer();
 } // namespace buffers::display

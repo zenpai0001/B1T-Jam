@@ -2,6 +2,7 @@
 
 /*This is the array I'm building*/
 
+#include <cmath>
 #include <raylib.h>
 #define CHUNK_X 16
 #define CHUNK_Y 16
@@ -9,10 +10,10 @@
 #include <cstdint>
 
 // Forward declare the map_chunks here.
-extern uint16_t map_chunk_variant0[CHUNK_X][CHUNK_Y];
-extern uint16_t map_chunk_variant1[CHUNK_X][CHUNK_Y];
-extern uint16_t map_chunk_variant2[CHUNK_X][CHUNK_Y];
-extern uint16_t map_chunk_variant3[CHUNK_X][CHUNK_Y];
+extern float map_chunk_variant0[CHUNK_X][CHUNK_Y];
+extern float map_chunk_variant1[CHUNK_X][CHUNK_Y];
+extern float map_chunk_variant2[CHUNK_X][CHUNK_Y];
+extern float map_chunk_variant3[CHUNK_X][CHUNK_Y];
 
 // Have this here if I need it.
 struct texture_atlas {
@@ -21,5 +22,5 @@ struct texture_atlas {
 };
 
 namespace map_gen {
-inline uint16_t tile(texture_atlas atlas);
+inline uint32_t tile(texture_atlas atlas);
 }

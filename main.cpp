@@ -8,11 +8,11 @@ void init_buffers() {
         LoadRenderTexture(GetScreenWidth(), GetScreenHeight());
   }
   controls::buffer[0].key = KEY_P;
-  controls::buffer[1].key = KEY_NUM_LOCK;
+  controls::buffer[1].key = KEY_TAB;
+  controls::buffer[2].key = KEY_Q;
 }
 
 void init_assets() {
-  buffers::display::player_sprite = LoadTexture("shrine_thief.png");
 
   buffers::display::stream_table[0] = {
       .sampleRate = 44100, .sampleSize = 32, .channels = 2};
@@ -37,6 +37,8 @@ int main() {
 
   SetConfigFlags(FLAG_WINDOW_TRANSPARENT);
   InitWindow(800, 800, "Game");
+  // Load the atlas shortly after init window.
+  buffers::display::load_atlas();
   SetTargetFPS(60);
 
   init_assets();
@@ -45,7 +47,7 @@ int main() {
   while (!WindowShouldClose()) {
     UpdateMusicStream(buffers::display::sound_table[0]);
 
-    controls::pause_menu();
+    controls::main_menu();
   }
   CloseWindow();
 
