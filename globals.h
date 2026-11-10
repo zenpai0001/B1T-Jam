@@ -14,6 +14,8 @@ struct buffer_table {
   int key;
 };
 
+extern buffer_table buffer[MAX_BUFFERS];
+
 // Macros to dictate player movement
 #define SPEED 50.0f
 #define DELTA_TIME GetFrameTime()
@@ -46,19 +48,6 @@ struct entities {
   };
 };
 
-namespace audio {
-
-enum music_state {
-  MUSIC_PLAYING,
-  MUSIC_PAUSED,
-  MUSIC_LOOPING,
-  SOUND_FX,
-};
-
-enum audio_files { OGG, WAV, MP3 };
-
-} // namespace audio
-
 // Forward declare functions and extern here.
 //  Prevents hack fixing missing symbols.
 
@@ -70,6 +59,7 @@ void move_player();
 
 extern Vector2 player_position;
 extern Camera2D player_cam;
+
 } // namespace player
 
 namespace controls {
@@ -87,13 +77,44 @@ struct audio_table {
   Sound sound;
 };
 
-extern Texture2D player_sprite;
-
 struct texture_atlas {
   const char *filepath;
   Image img;
   Texture2D texture;
 };
+
+extern audio_table music_system[MAX_BUFFERS];
+extern audio_table sound_system[MAX_BUFFERS];
+extern texture_atlas atlas[MAX_BUFFERS];
+extern Rectangle slice[MAX_BUFFERS];
 void load_atlas();
+void load_music();
 void gameplay_buffer();
 } // namespace buffers::display
+
+extern Texture2D player_sprite;
+extern Rectangle *src;
+extern Rectangle dest;
+
+namespace audio {
+
+enum music_state {
+  MUSIC_PLAYING,
+  MUSIC_PAUSED,
+  MUSIC_LOOPING,
+  SOUND_FX,
+};
+
+enum audio_files { OGG, WAV, MP3 };
+
+void init_audio();
+void close_audio();
+void update_music();
+void update_sound();
+
+void start_music(const char *filepath, int index, bool _is_looping);
+void start_sound(const char *filepath);
+
+void close_music(int index);
+
+} // namespace audio

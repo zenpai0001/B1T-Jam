@@ -1,4 +1,5 @@
 #include "globals.h"
+#include "map.h"
 #include <raylib.h>
 
 void init_buffers() {
@@ -12,43 +13,26 @@ void init_buffers() {
   controls::buffer[2].key = KEY_Q;
 }
 
-void init_assets() {
-
-  buffers::display::stream_table[0] = {
-      .sampleRate = 44100, .sampleSize = 32, .channels = 2};
-  buffers::display::sound_table[0] = {.stream =
-                                          buffers::display::stream_table[0],
-                                      .frameCount = 3600,
-                                      .looping = true};
-  PlayMusicStream(buffers::display::sound_table[0]);
-}
+void init_assets() {}
 
 int main() {
   // I have no idea why this works.
   //  Removing this won't make the ball move at all. So weird.
 
-  // Testing player position and camera.
-  Vector2 player_position = {(float)width / 2, (float)height / 2};
-
-  Camera2D player_cam = {.offset = {(float)width / 2, (float)height / 2},
-                         .target = player_position,
-                         .rotation = 0.0f,
-                         .zoom = 1.0f};
-
   SetConfigFlags(FLAG_WINDOW_TRANSPARENT);
+  buffers::display::load_atlas();
   InitWindow(800, 800, "Game");
   // Load the atlas shortly after init window.
-  buffers::display::load_atlas();
   SetTargetFPS(60);
 
-  init_assets();
   init_buffers();
 
+  buffers::display::music_system[0].filepath = "shrine_stealth.mp3";
   while (!WindowShouldClose()) {
-    UpdateMusicStream(buffers::display::sound_table[0]);
-
     controls::main_menu();
+    audio::start_music(buffers::display::music_system[0].filepath, 0, true);
   }
+  UnloadRenderTexture(controls::buffer[0].buffers);
   CloseWindow();
 
   return 0;

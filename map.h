@@ -22,5 +22,14 @@ struct texture_atlas {
 };
 
 namespace map_gen {
-inline uint32_t tile(texture_atlas atlas);
-}
+
+enum tile_type {};
+
+static Rectangle tile_locations[4];
+
+void draw_terrain();
+void seed(unsigned int init_state);
+unsigned int gen_seed(unsigned int seed);
+Rectangle slice_texture(Rectangle slice);
+Rectangle get_slice(int tile_id, int tile_size, int columns);
+} // namespace map_gen

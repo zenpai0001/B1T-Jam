@@ -1,4 +1,5 @@
 #include "globals.h"
+#include "map.h"
 #include <raylib.h>
 
 #define KEY_MAX_SIZE 20
@@ -60,5 +61,4 @@ void move_player() {
     }
   }
 }
-
 } // namespace player
